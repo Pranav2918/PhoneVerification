@@ -12,6 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Home')),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await _auth.signOut();
@@ -24,7 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(Icons.logout),
       ),
       body: Center(
-        child: Text('HomeScreen'),
+        child:
+            Text('Welcome', style: TextStyle(color: Colors.teal, fontSize: 18)),
       ),
     );
   }

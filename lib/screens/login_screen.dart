@@ -46,55 +46,63 @@ class _LoginScreenState extends State<LoginScreen> {
           showLoading = false;
         });
         _scaffoldKey.currentState!
-            .showSnackBar(SnackBar(content: Text(e.message.toString())));
+            .showSnackBar(SnackBar(content: Text('Invalid OTP')));
       });
     }
   }
 
   getMobileFormWidget(context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Spacer(),
+        Container(
+            child: Text('Use your country code before your phone number :)',
+                style: TextStyle(color: Colors.red))),
+        SizedBox(height: 20),
         TextField(
           controller: phoneController,
           decoration: InputDecoration(hintText: "Phone Number"),
         ),
-        SizedBox(height: 15),
+        SizedBox(height: 20),
         // ignore: deprecated_member_use
-        FlatButton(
-            color: Colors.teal,
-            onPressed: () async {
-              setState(() {
-                showLoading = true;
-              });
+        Center(
+          child: FlatButton(
+              color: Colors.teal,
+              onPressed: () async {
+                setState(() {
+                  showLoading = true;
+                });
 
-              await _auth.verifyPhoneNumber(
-                  phoneNumber: phoneController.text,
-                  verificationCompleted: (phoneAuthCredential) async {
-                    setState(() {
-                      showLoading = false;
-                    });
-                    // signInWithPhoneAuthCredential(phoneAuthCredential);
-                  },
-                  verificationFailed: (verificationFailed) async {
-                    setState(() {
-                      showLoading = false;
-                    });
-                    // ignore: deprecated_member_use
-                    _scaffoldKey.currentState!.showSnackBar(SnackBar(
-                        content: Text(verificationFailed.message.toString())));
-                  },
-                  codeSent: (verficationId, resendingToken) async {
-                    setState(() {
-                      showLoading = false;
-                      currentState =
-                          MobileVerificationState.SHOW_OTP_FORM_STATE;
-                      this.verificationId = verficationId;
-                    });
-                  },
-                  codeAutoRetrievalTimeout: (verficationId) async {});
-            },
-            child: Text('SEND', style: TextStyle(color: Colors.white))),
+                await _auth.verifyPhoneNumber(
+                    phoneNumber: '+91${phoneController.text}',
+                    verificationCompleted: (phoneAuthCredential) async {
+                      setState(() {
+                        showLoading = false;
+                      });
+                      // signInWithPhoneAuthCredential(phoneAuthCredential);
+                    },
+                    verificationFailed: (verificationFailed) async {
+                      setState(() {
+                        showLoading = false;
+                      });
+                      // ignore: deprecated_member_use
+                      _scaffoldKey.currentState!.showSnackBar(SnackBar(
+                          content:
+                              Text(verificationFailed.message.toString())));
+                    },
+                    codeSent: (verficationId, resendingToken) async {
+                      setState(() {
+                        showLoading = false;
+                        currentState =
+                            MobileVerificationState.SHOW_OTP_FORM_STATE;
+                        this.verificationId = verficationId;
+                      });
+                    },
+                    codeAutoRetrievalTimeout: (verficationId) async {});
+              },
+              child: Text('SEND', style: TextStyle(color: Colors.white))),
+        ),
         Spacer()
       ],
     );
@@ -104,6 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(children: <Widget>[
       Spacer(),
       TextField(
+        keyboardType: TextInputType.phone,
         controller: otpController,
         decoration: InputDecoration(hintText: "OTP"),
       ),
@@ -114,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () async {
             PhoneAuthCredential phoneAuthCredential =
                 PhoneAuthProvider.credential(
-                    verificationId: verificationId, smsCode: otpController.text);
+                    verificationId: verificationId,
+                    smsCode: otpController.text);
             signInWithPhoneAuthCredential(phoneAuthCredential);
           },
           child: Text('Verify', style: TextStyle(color: Colors.white))),
@@ -127,6 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Mobile Phone Verification')),
       key: _scaffoldKey,
       body: Container(
         child: showLoading
