@@ -56,10 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Spacer(),
-        Container(
-            child: Text('Use your country code before your phone number :)',
-                style: TextStyle(color: Colors.red))),
-        SizedBox(height: 20),
         TextField(
           controller: phoneController,
           decoration: InputDecoration(hintText: "Phone Number"),
